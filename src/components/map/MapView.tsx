@@ -5,11 +5,15 @@ import 'leaflet/dist/leaflet.css'
 import { metricBoundsAroundCenter } from '../../lib/geo/projection'
 import { describeRegion } from '../../lib/sc4/region'
 import type { LatLon } from '../../types/terrain'
+import { getMapTheme, type MapThemeId } from './mapThemes'
+import { MapThemeSwitcher } from './MapThemeSwitcher'
 
 interface MapViewProps {
   center: LatLon
   largeTiles: number
+  themeId: MapThemeId
   onCenterChange: (center: LatLon) => void
+  onThemeChange: (id: MapThemeId) => void
 }
 
 interface ScopeFrame {
@@ -128,27 +132,40 @@ const InvalidateSizeOnMount = () => {
   return null
 }
 
-export const MapView = ({ center, largeTiles, onCenterChange }: MapViewProps) => (
-  <div className="map-view-wrap">
-    <MapContainer
-      center={[center.lat, center.lon]}
-      zoom={10}
-      className="leaflet-map"
-      scrollWheelZoom
-      zoomControl
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        maxZoom={19}
-      />
-      <InvalidateSizeOnMount />
-      <SyncViewToCenter center={center} />
-      <ScopeOverlay largeTiles={largeTiles} onCenterChange={onCenterChange} />
-    </MapContainer>
-    <p className="map-hint">
-      Scope stays locked to screen center — pan the map underneath to aim.
-      Zoom changes how large it looks, not the real-world export size.
-    </p>
-  </div>
-)
+export const MapView = ({
+  center,
+  largeTiles,
+  themeId,
+  onCenterChange,
+  onThemeChange,
+}: MapViewProps) => {
+  const theme = getMapTheme(themeId)
+
+  return (
+    <div className="map-view-wrap">
+      <MapThemeSwitcher themeId={themeId} onThemeChange={onThemeChange} />
+      <MapContainer
+        center={[center.lat, center.lon]}
+        zoom={10}
+        className="leaflet-map"
+        scrollWheelZoom
+        zoomControl
+      >
+        <TileLayer
+          key={theme.id}
+          attribution={theme.attribution}
+          url={theme.url}
+          maxZoom={theme.maxZoom}
+          {...(theme.subdomains ? { subdomains: theme.subdomains } : {})}
+        />
+        <InvalidateSizeOnMount />
+        <SyncViewToCenter center={center} />
+        <ScopeOverlay largeTiles={largeTiles} onCenterChange={onCenterChange} />
+      </MapContainer>
+      <p className="map-hint">
+        Scope stays locked to screen center — pan the map underneath to aim.
+        Zoom changes how large it looks, not the real-world export size.
+      </p>
+    </div>
+  )
+}

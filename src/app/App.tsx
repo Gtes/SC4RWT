@@ -2,6 +2,7 @@ import { MapView } from '../components/map/MapView'
 import { ControlsSidebar } from '../components/controls/ControlsSidebar'
 import { AppHeader } from '../components/layout/AppHeader'
 import { useExportSettings } from '../hooks/useExportSettings'
+import { useMapTheme } from '../hooks/useMapTheme'
 import { useTerrainWorker } from '../hooks/useTerrainWorker'
 import { describeRegion } from '../lib/sc4/region'
 import './App.css'
@@ -9,6 +10,7 @@ import './App.css'
 const App = () => {
   const settings = useExportSettings()
   const worker = useTerrainWorker(settings)
+  const { themeId, setThemeId } = useMapTheme()
 
   const region = describeRegion(settings.largeTiles, settings.largeTiles)
 
@@ -20,7 +22,9 @@ const App = () => {
         <MapView
           center={settings.center}
           largeTiles={settings.largeTiles}
+          themeId={themeId}
           onCenterChange={settings.setCenter}
+          onThemeChange={setThemeId}
         />
       </div>
 
