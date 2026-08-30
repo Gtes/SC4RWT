@@ -65,6 +65,39 @@ body,
   min-width: 0;
 }
 
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.help-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex-shrink: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.help-btn:hover,
+.help-btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--text);
+  outline: none;
+}
+
 .app-header h1 {
   margin: 0;
   font-size: 1.25rem;
@@ -431,4 +464,166 @@ button.primary {
 
 button.primary:hover:not(:disabled) {
   background: var(--accent-hover);
+}
+
+.help-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+}
+
+.help-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: rgba(8, 12, 16, 0.72);
+  cursor: pointer;
+}
+
+.help-modal {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(44rem, 100%);
+  max-height: calc(100dvh - 200px);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+  align-self: center;
+}
+
+.help-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #2a3640 0%, var(--panel) 100%);
+}
+
+.help-modal-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.help-modal-close {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.help-modal-close:hover,
+.help-modal-close:focus-visible {
+  color: var(--text);
+  border-color: var(--accent);
+  outline: none;
+}
+
+.help-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 1rem 1.25rem 2rem;
+  line-height: 1.55;
+}
+
+.help-modal-body .help-lead {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.help-modal-body h3 {
+  margin: 1.5rem 0 0.55rem;
+  font-size: 1.05rem;
+}
+
+.help-modal-body h4 {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 0.95rem;
+}
+
+.help-modal-body p,
+.help-modal-body li {
+  margin: 0 0 0.65rem;
+  font-size: 0.92rem;
+}
+
+.help-modal-body ul {
+  margin: 0 0 0.75rem;
+  padding-left: 1.2rem;
+}
+
+.help-modal-body li + li {
+  margin-top: 0.3rem;
+}
+
+.help-table-wrap {
+  overflow-x: auto;
+  margin: 0.65rem 0 1rem;
+}
+
+.help-modal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.help-modal-body th,
+.help-modal-body td {
+  text-align: left;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.help-modal-body th {
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.help-note {
+  margin: 0.75rem 0 1rem !important;
+  padding: 0.7rem 0.85rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg);
+  border-radius: 0 6px 6px 0;
+}
+
+.help-tip {
+  margin: 1.35rem 0 0;
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.help-tip h4 {
+  margin-top: 0 !important;
+}
+
+.help-tip p {
+  margin-bottom: 0 !important;
 }

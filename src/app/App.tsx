@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { MapView } from '../components/map/MapView'
 import { ControlsSidebar } from '../components/controls/ControlsSidebar'
 import { AppHeader } from '../components/layout/AppHeader'
+import { HelpModal } from '../components/layout/HelpModal'
 import { useExportSettings } from '../hooks/useExportSettings'
 import { useMapTheme } from '../hooks/useMapTheme'
 import { useTerrainWorker } from '../hooks/useTerrainWorker'
@@ -11,12 +13,17 @@ const App = () => {
   const settings = useExportSettings()
   const worker = useTerrainWorker(settings)
   const { themeId, setThemeId } = useMapTheme()
+  const [helpOpen, setHelpOpen] = useState(false)
 
   const region = describeRegion(settings.largeTiles, settings.largeTiles)
 
   return (
     <div className="app">
-      <AppHeader center={settings.center} region={region} />
+      <AppHeader
+        center={settings.center}
+        region={region}
+        onOpenHelp={() => setHelpOpen(true)}
+      />
 
       <div className="map-panel">
         <MapView
@@ -49,6 +56,8 @@ const App = () => {
         onCalculateManual={worker.onCalculateManual}
         onResetDefaults={worker.onResetDefaults}
       />
+
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   )
 }

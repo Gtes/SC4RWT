@@ -4,7 +4,73 @@ Browser app that turns a real-world map selection into a **16-bit grayscale heig
 
 ![SC4RWT — aim the fixed center scope over a real map, tune water & height, generate a region heightmap](./docs/demo.jpg)
 
-*San Francisco Bay — 4×4 large cities, auto coastal leveling, shareable URL params.*
+_San Francisco Bay — 4×4 large cities, auto coastal leveling, shareable URL params._
+
+## How to use
+
+### 1. Aim with the map
+
+The orange square in the middle of the map is your **export region**. It stays fixed on screen — **pan the map underneath** to choose where in the real world to export.
+
+- **Zoom** only changes how large the square looks. It does **not** change the real-world size of the export.
+- Use the **Map** dropdown (top-right of the map) to switch between Standard, Dark, Light, Topo, or Satellite tiles if that helps you aim.
+
+### 2. Pick a region size
+
+Under **Region size (large cities)**, choose how big the SimCity 4 region should be:
+
+| Size    | What it means           | Rough real-world span | Output PNG  |
+| ------- | ----------------------- | --------------------- | ----------- |
+| **1×1** | One large city          | ~4.1 × 4.1 km         | 257 × 257   |
+| **2×2** | Four large cities       | ~8.2 × 8.2 km         | 513 × 513   |
+| **4×4** | Sixteen large cities    | ~16.4 × 16.4 km       | 1025 × 1025 |
+| **8×8** | Sixty-four large cities | ~32.8 × 32.8 km       | 2049 × 2049 |
+
+Scale is always **1 terrain cell = 16 meters**. Bigger sizes take longer to generate and download a larger PNG.
+
+### 3. Water & height
+
+These settings control how real elevation becomes SC4 terrain (what shows as water vs land, and how steep hills look).
+
+#### Auto mode (recommended to start)
+
+Set **Water plane mode** to **Auto (from region DEM)**.
+
+When you click **Generate PNG**, the app samples elevations under the orange square and picks sensible values for you:
+
+- **Coast / ocean** → water plane near **0 m** sea level
+- **Inland rivers / lakes** → water plane near the low elevation band in that area
+- **Vertical scale** may bump up a bit in flatter areas so relief still reads in-game
+
+You’ll see a short reason under the controls after generate (or after Calculate in Manual).
+
+**Note:** Auto is still a **work in progress** — it often helps, but it does **not always** pick a perfect water plane or scale for every region. If the shore looks wrong or hills are too flat/steep, switch to **Manual**, use **Calculate from DEM** as a starting point, then tweak the sliders.
+
+#### Manual mode
+
+Set **Water plane mode** to **Manual** when you want full control:
+
+| Control              | What it does                                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| **Water plane (m)**  | Real-world elevation treated as SC4 sea level. Land above this stays dry; below becomes water. |
+| **Water deepen (m)** | Extra depth pushed below the plane so water looks deeper / more blue in SC4.                   |
+| **Vertical scale**   | Stretches or flattens hills. **&lt; 1** = gentler; **&gt; 1** = more dramatic.                 |
+
+Helpful buttons in Manual:
+
+- **Calculate from DEM** — samples the current map region and fills the three sliders (same idea as Auto, but you can tweak afterward).
+- **Reset to defaults** — coastal starter: plane **0 m**, deepen **15 m**, scale **1×**.
+
+### 4. Generate
+
+Click **Generate PNG**. A spinner on the button means it’s working; the heightmap downloads when ready.
+
+- Use **Cancel** if you need to stop.
+- Your current map center, size, and water settings are kept in the **URL**, so you can bookmark or share the exact setup.
+
+### Tip
+
+Try **Auto** first for a quick generate. If the shore or hills look off, switch to **Manual**, click **Calculate from DEM** for a starting guess, then nudge plane / deepen / scale. You can also skip Auto entirely and stay in Manual the whole time.
 
 ## Features
 
@@ -62,9 +128,9 @@ True **16-bit grayscale PNG** (custom encoder + zlib level 0): one sample per SC
 
 ### URL parameters
 
-| Param | Meaning |
-|---|---|
-| `lat`, `lon` | Export center |
-| `size` | Large cities per side (1, 2, 4, 8) |
-| `mode` | `auto` or `manual` |
-| `plane`, `deepen`, `scale` | Manual water / height settings |
+| Param                      | Meaning                            |
+| -------------------------- | ---------------------------------- |
+| `lat`, `lon`               | Export center                      |
+| `size`                     | Large cities per side (1, 2, 4, 8) |
+| `mode`                     | `auto` or `manual`                 |
+| `plane`, `deepen`, `scale` | Manual water / height settings     |
