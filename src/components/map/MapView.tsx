@@ -21,9 +21,39 @@ interface ScopeFrame {
   height: number
 }
 
+const scopeFrameForMap = (
+  map: ReturnType<typeof useMap>,
+  largeTiles: number,
+): ScopeFrame => {
+  const c = map.getCenter()
+  const region = describeRegion(largeTiles, largeTiles)
+  const { projection, bounds } = metricBoundsAroundCenter(
+    { lat: c.lat, lon: c.lng },
+    region.widthMeters,
+    region.heightMeters,
+  )
+  const midY = (bounds.minY + bounds.maxY) / 2
+  const midX = (bounds.minX + bounds.maxX) / 2
+  const west = projection.inverse(bounds.minX, midY)
+  const east = projection.inverse(bounds.maxX, midY)
+  const south = projection.inverse(midX, bounds.minY)
+  const north = projection.inverse(midX, bounds.maxY)
+
+  const w = map.latLngToContainerPoint([west.lat, west.lon])
+  const e = map.latLngToContainerPoint([east.lat, east.lon])
+  const s = map.latLngToContainerPoint([south.lat, south.lon])
+  const n = map.latLngToContainerPoint([north.lat, north.lon])
+
+  return {
+    width: Math.hypot(e.x - w.x, e.y - w.y),
+    height: Math.hypot(n.x - s.x, n.y - s.y),
+  }
+}
+
 /**
  * Game-style scope: HTML overlay fixed at viewport center.
  * Map pans underneath; only size updates with zoom / latitude.
+ * Center is committed to React only when pan/zoom settles (not every frame).
  */
 const ScopeOverlay = ({
   largeTiles,
@@ -35,44 +65,27 @@ const ScopeOverlay = ({
   const map = useMap()
   const [frame, setFrame] = useState<ScopeFrame>({ width: 0, height: 0 })
 
-  const refresh = useCallback(() => {
+  const refreshFrame = useCallback(() => {
+    setFrame(scopeFrameForMap(map, largeTiles))
+  }, [largeTiles, map])
+
+  const commitCenter = useCallback(() => {
     const c = map.getCenter()
     onCenterChange({ lat: c.lat, lon: c.lng })
-
-    const region = describeRegion(largeTiles, largeTiles)
-    const { projection, bounds } = metricBoundsAroundCenter(
-      { lat: c.lat, lon: c.lng },
-      region.widthMeters,
-      region.heightMeters,
-    )
-    const midY = (bounds.minY + bounds.maxY) / 2
-    const midX = (bounds.minX + bounds.maxX) / 2
-    const west = projection.inverse(bounds.minX, midY)
-    const east = projection.inverse(bounds.maxX, midY)
-    const south = projection.inverse(midX, bounds.minY)
-    const north = projection.inverse(midX, bounds.maxY)
-
-    const w = map.latLngToContainerPoint([west.lat, west.lon])
-    const e = map.latLngToContainerPoint([east.lat, east.lon])
-    const s = map.latLngToContainerPoint([south.lat, south.lon])
-    const n = map.latLngToContainerPoint([north.lat, north.lon])
-
-    setFrame({
-      width: Math.hypot(e.x - w.x, e.y - w.y),
-      height: Math.hypot(n.x - s.x, n.y - s.y),
-    })
+    setFrame(scopeFrameForMap(map, largeTiles))
   }, [largeTiles, map, onCenterChange])
 
   useMapEvents({
-    move: refresh,
-    zoom: refresh,
-    zoomend: refresh,
-    resize: refresh,
+    move: refreshFrame,
+    zoom: refreshFrame,
+    moveend: commitCenter,
+    zoomend: commitCenter,
+    resize: refreshFrame,
   })
 
   useEffect(() => {
-    refresh()
-  }, [refresh])
+    commitCenter()
+  }, [commitCenter])
 
   const gridFrac = Array.from(
     { length: largeTiles - 1 },
@@ -150,12 +163,16 @@ export const MapView = ({
         className="leaflet-map"
         scrollWheelZoom
         zoomControl
+        preferCanvas
       >
         <TileLayer
           key={theme.id}
           attribution={theme.attribution}
           url={theme.url}
           maxZoom={theme.maxZoom}
+          updateWhenIdle
+          updateWhenZooming={false}
+          keepBuffer={1}
           {...(theme.subdomains ? { subdomains: theme.subdomains } : {})}
         />
         <InvalidateSizeOnMount />
