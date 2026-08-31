@@ -4,7 +4,8 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
+  // Render / local: `/`. GitHub Pages project site: set BASE_PATH=/SC4RWT/ in CI.
+  base: process.env.BASE_PATH || '/',
   plugins: [react()],
   worker: {
     format: 'es',

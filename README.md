@@ -95,9 +95,11 @@ Optional:
 
 ```bash
 npm test          # unit tests
-npm run build     # production bundle → dist/
+npm run build     # production bundle → dist/ (base `/`, same as Render)
 npm run preview   # serve dist/
 ```
+
+GitHub Pages builds with `BASE_PATH=/SC4RWT/` in CI so assets resolve under `/SC4RWT/`. Render keeps the default `/` base.
 
 ## Implementation
 
@@ -143,10 +145,10 @@ This project’s **source code** is licensed under the [MIT License](./LICENSE).
 
 **Third-party data & map services** are **not** covered by this license:
 
-| What | Your obligation |
-| --- | --- |
-| **Elevation tiles** (AWS Mapzen Terrarium) | Open data — follow [data source attribution](https://github.com/tilezen/joerd/blob/master/docs/data-sources.md) |
-| **Map tiles** (OSM, CARTO, Esri, OpenTopoMap, etc.) | Each provider has its own **terms of use** and attribution rules; the app shows map attribution in the UI |
+| What                                                | Your obligation                                                                                                 |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Elevation tiles** (AWS Mapzen Terrarium)          | Open data — follow [data source attribution](https://github.com/tilezen/joerd/blob/master/docs/data-sources.md) |
+| **Map tiles** (OSM, CARTO, Esri, OpenTopoMap, etc.) | Each provider has its own **terms of use** and attribution rules; the app shows map attribution in the UI       |
 
 Using Amazon or map APIs in the app does **not** mean you own that data or can re-license it. Your MIT license only applies to **your** code in this repo.
 
