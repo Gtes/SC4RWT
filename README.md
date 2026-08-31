@@ -134,3 +134,22 @@ True **16-bit grayscale PNG** (custom encoder + zlib level 0): one sample per SC
 | `size`                     | Large cities per side (1, 2, 4, 8) |
 | `mode`                     | `auto` or `manual`                 |
 | `plane`, `deepen`, `scale` | Manual water / height settings     |
+
+## License
+
+This project’s **source code** is licensed under the [MIT License](./LICENSE). You wrote it; you own the copyright; MIT lets others use, modify, and share the code if they keep the license notice.
+
+**Third-party code** (npm packages such as React, Leaflet, proj4, etc.) stays under **their** licenses — MIT does not replace those. See each package’s license in `node_modules` or on npm.
+
+**Third-party data & map services** are **not** covered by this license:
+
+| What | Your obligation |
+| --- | --- |
+| **Elevation tiles** (AWS Mapzen Terrarium) | Open data — follow [data source attribution](https://github.com/tilezen/joerd/blob/master/docs/data-sources.md) |
+| **Map tiles** (OSM, CARTO, Esri, OpenTopoMap, etc.) | Each provider has its own **terms of use** and attribution rules; the app shows map attribution in the UI |
+
+Using Amazon or map APIs in the app does **not** mean you own that data or can re-license it. Your MIT license only applies to **your** code in this repo.
+
+## Disclaimer
+
+Unofficial fan tool — **not affiliated with Electronic Arts or Maxis**. SimCity 4 is a trademark of its respective owners.
