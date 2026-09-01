@@ -19,11 +19,7 @@ const App = () => {
 
   return (
     <div className="app">
-      <AppHeader
-        center={settings.center}
-        region={region}
-        onOpenHelp={() => setHelpOpen(true)}
-      />
+      <AppHeader center={settings.center} region={region} />
 
       <div className="map-panel">
         <MapView
@@ -55,6 +51,7 @@ const App = () => {
         onCancel={worker.onCancel}
         onCalculateManual={worker.onCalculateManual}
         onResetDefaults={worker.onResetDefaults}
+        onOpenHelp={() => setHelpOpen(true)}
       />
 
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />

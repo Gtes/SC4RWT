@@ -5,23 +5,24 @@ import type { LatLon } from '../../types/terrain'
 interface AppHeaderProps {
   center: LatLon
   region: RegionSpec
-  onOpenHelp: () => void
 }
 
-export const AppHeader = ({ center, region, onOpenHelp }: AppHeaderProps) => (
+export const AppHeader = ({ center, region }: AppHeaderProps) => (
   <header className="app-header">
     <div className="header-brand">
       <div className="header-title-row">
         <h1>SC4 Real-World Terrain</h1>
-        <button
-          type="button"
-          className="help-btn"
-          onClick={onOpenHelp}
-          title="How to use"
-          aria-label="How to use"
+        <a
+          className="support-ukraine"
+          href="https://u24.gov.ua/"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="United24 - Donate to support Ukraine's independence."
+          aria-label="Support Ukraine"
         >
-          ?
-        </button>
+          <span className="support-ukraine__flag__blue" />
+          <span className="support-ukraine__flag__yellow" />
+        </a>
       </div>
       <p className="tagline">
         Aim with the fixed center scope — zoom never changes export scale

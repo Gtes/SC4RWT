@@ -3,6 +3,7 @@ import {
   type Sc4RegionSize,
 } from '../../lib/sc4/constants'
 import type { WaterPlaneMode } from '../../utils/urlState'
+import { GitHubIcon } from '../icons/GitHubIcon'
 import { WaterHeightPanel } from './WaterHeightPanel'
 
 interface ControlsSidebarProps {
@@ -16,6 +17,7 @@ interface ControlsSidebarProps {
   waterDepthMeters: number
   verticalScale: number
   lastAutoReason: string
+  onOpenHelp: () => void
   onLargeTilesChange: (size: Sc4RegionSize) => void
   onWaterPlaneModeChange: (mode: WaterPlaneMode) => void
   onWaterPlaneMetersChange: (value: number) => void
@@ -47,8 +49,21 @@ export const ControlsSidebar = ({
   onCancel,
   onCalculateManual,
   onResetDefaults,
+  onOpenHelp,
 }: ControlsSidebarProps) => (
   <aside className="controls">
+    <div className="controls-toolbar">
+      <button
+        type="button"
+        className="help-btn"
+        onClick={onOpenHelp}
+        title="How to use"
+        aria-label="How to use"
+      >
+        ?
+      </button>
+    </div>
+
     <label className="field">
       <span>Region size (large cities)</span>
       <select
@@ -99,5 +114,18 @@ export const ControlsSidebar = ({
       onCalculateManual={onCalculateManual}
       onResetDefaults={onResetDefaults}
     />
+
+    <footer className="controls-footer">
+      <a
+        className="controls-footer-link"
+        href="https://github.com/Gtes/SC4RWT"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="View source on GitHub"
+        title="GitHub"
+      >
+        <GitHubIcon />
+      </a>
+    </footer>
   </aside>
 )
