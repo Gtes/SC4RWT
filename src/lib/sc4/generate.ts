@@ -13,6 +13,10 @@ import {
   sampleRegionElevationsCoarse,
   type ResampleProgress,
 } from './resample'
+import {
+  applySyntheticBathymetry,
+  DEFAULT_SYNTH_BATHYMETRY,
+} from './syntheticBathymetry'
 
 function resolveHeightAdjustments(
   request: GenerateRequest,
@@ -95,16 +99,41 @@ export async function generateTerrainPng(
       (m) => source.isNodata(m),
     )
 
-    const values = encodeHeightGrid(elevations, {
-      waterPlaneMeters: applied.waterPlaneMeters,
-      verticalScale: applied.verticalScale,
-      waterDepthMeters: applied.waterDepthMeters,
+    const synth = request.syntheticBathymetry
+    let grid = elevations
+    let encodeDeepen = applied.waterDepthMeters
+    let appliedOut = applied
+
+    if (synth?.enabled) {
+      const maxDepthMeters =
+        synth.maxDepthMeters ?? DEFAULT_SYNTH_BATHYMETRY.maxDepthMeters
+      const falloffMeters =
+        synth.falloffMeters ?? DEFAULT_SYNTH_BATHYMETRY.falloffMeters
+      grid = applySyntheticBathymetry(elevations, width, height, {
+        waterPlaneMeters: applied.waterPlaneMeters,
+        maxDepthMeters,
+        falloffMeters,
+        isNodata: (m) => source.isNodata(m),
+      })
+      // Synth replaces the flat deepen offset.
+      encodeDeepen = 0
+      appliedOut = {
+        ...applied,
+        waterDepthMeters: 0,
+        reason: `${applied.reason} · synth bathymetry (max ${maxDepthMeters} m, falloff ${falloffMeters} m)`,
+      }
+    }
+
+    const values = encodeHeightGrid(grid, {
+      waterPlaneMeters: appliedOut.waterPlaneMeters,
+      verticalScale: appliedOut.verticalScale,
+      waterDepthMeters: encodeDeepen,
       treatAsOcean: (m) => source.isNodata(m),
     })
     const blob = encode16BitGrayscalePng(width, height, values)
     onProgress?.({ stage: 'encoding', progress: 1 })
-    onProgress?.({ stage: 'done', blob, width, height, applied })
-    return { blob, width, height, applied }
+    onProgress?.({ stage: 'done', blob, width, height, applied: appliedOut })
+    return { blob, width, height, applied: appliedOut }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     onProgress?.({ stage: 'error', message })

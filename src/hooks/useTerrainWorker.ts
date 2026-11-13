@@ -5,6 +5,12 @@ import type { WorkerInbound, WorkerOutbound } from '../types/worker'
 import { downloadBlob } from '../utils/downloadBlob'
 import type { WaterPlaneMode } from '../utils/urlState'
 
+interface SyntheticBathymetrySettings {
+  enabled: boolean
+  maxDepthMeters: number
+  falloffMeters: number
+}
+
 interface UseTerrainWorkerParams {
   center: LatLon
   largeTiles: Sc4RegionSize
@@ -15,6 +21,8 @@ interface UseTerrainWorkerParams {
   setWaterPlaneMeters: (value: number) => void
   setWaterDepthMeters: (value: number) => void
   setVerticalScale: (value: number) => void
+  /** Experimental shore-distance underwater carving. */
+  syntheticBathymetry?: SyntheticBathymetrySettings
 }
 
 export const useTerrainWorker = ({
@@ -27,6 +35,7 @@ export const useTerrainWorker = ({
   setWaterPlaneMeters,
   setWaterDepthMeters,
   setVerticalScale,
+  syntheticBathymetry,
 }: UseTerrainWorkerParams) => {
   const [lastAutoReason, setLastAutoReason] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -113,6 +122,9 @@ export const useTerrainWorker = ({
       waterPlaneMeters,
       waterDepthMeters,
       verticalScale,
+      ...(syntheticBathymetry?.enabled
+        ? { syntheticBathymetry }
+        : {}),
     }
     const msg: WorkerInbound = { type: 'generate', request }
     workerRef.current.postMessage(msg)
@@ -121,6 +133,7 @@ export const useTerrainWorker = ({
     center,
     largeTiles,
     suggesting,
+    syntheticBathymetry,
     waterDepthMeters,
     waterPlaneMeters,
     waterPlaneMode,

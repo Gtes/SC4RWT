@@ -91,6 +91,11 @@ npm run dev
 
 Open the URL Vite prints (usually `http://localhost:5173/`).
 
+**Live:** https://sc4rwt.onrender.com · https://gtes.github.io/SC4RWT/
+
+**Experimental synth depth** (distance-to-shore underwater carving — not real bathymetry):  
+`/test-synth-depth` — e.g. https://gtes.github.io/SC4RWT/test-synth-depth or `http://localhost:5173/test-synth-depth`
+
 Optional:
 
 ```bash

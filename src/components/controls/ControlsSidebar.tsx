@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import {
   SC4_SUPPORTED_REGION_SIZES,
   type Sc4RegionSize,
@@ -27,6 +28,8 @@ interface ControlsSidebarProps {
   onCancel: () => void
   onCalculateManual: () => void
   onResetDefaults: () => void
+  /** Extra controls (e.g. experimental synth bathymetry). */
+  experimentalSlot?: ReactNode
 }
 
 export const ControlsSidebar = ({
@@ -50,6 +53,7 @@ export const ControlsSidebar = ({
   onCalculateManual,
   onResetDefaults,
   onOpenHelp,
+  experimentalSlot,
 }: ControlsSidebarProps) => (
   <aside className="controls">
     <div className="controls-toolbar">
@@ -114,6 +118,8 @@ export const ControlsSidebar = ({
       onCalculateManual={onCalculateManual}
       onResetDefaults={onResetDefaults}
     />
+
+    {experimentalSlot}
 
     <footer className="controls-footer">
       <a

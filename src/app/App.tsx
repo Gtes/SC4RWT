@@ -7,6 +7,7 @@ import { useExportSettings } from '../hooks/useExportSettings'
 import { useMapTheme } from '../hooks/useMapTheme'
 import { useTerrainWorker } from '../hooks/useTerrainWorker'
 import { describeRegion } from '../lib/sc4/region'
+import { synthDepthTestHref } from '../utils/appPaths'
 import './App.css'
 
 const App = () => {
@@ -52,6 +53,11 @@ const App = () => {
         onCalculateManual={worker.onCalculateManual}
         onResetDefaults={worker.onResetDefaults}
         onOpenHelp={() => setHelpOpen(true)}
+        experimentalSlot={
+          <p className="exp-link-note">
+            <a href={synthDepthTestHref()}>Experimental: synth depth →</a>
+          </p>
+        }
       />
 
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />

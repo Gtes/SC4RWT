@@ -42,8 +42,17 @@ export interface GenerateRequest {
    */
   waterPlaneMode?: 'absolute' | 'auto' | 'regionMin'
   verticalScale?: number
-  /** Extra depth (m) for samples at/below water plane. Ignored in auto. */
+  /** Extra depth (m) for samples at/below water plane. Ignored in auto / synth. */
   waterDepthMeters?: number
+  /**
+   * Experimental: carve underwater depth from distance-to-shore
+   * (no real bathymetry data). When enabled, constant waterDepthMeters is skipped.
+   */
+  syntheticBathymetry?: {
+    enabled: boolean
+    maxDepthMeters?: number
+    falloffMeters?: number
+  }
 }
 
 export interface AppliedHeightAdjustments {

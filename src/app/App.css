@@ -169,6 +169,42 @@ body,
   flex-direction: column;
 }
 
+.exp-banner {
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text);
+  background: #3a2a18;
+  border-bottom: 1px solid var(--accent);
+}
+
+.exp-banner a {
+  color: var(--accent-hover);
+}
+
+.exp-link-note {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.exp-link-note a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.exp-link-note a:hover {
+  color: var(--accent);
+}
+
+.exp-synth .hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
 .map-view-wrap {
   flex: 1;
   min-height: 0;
